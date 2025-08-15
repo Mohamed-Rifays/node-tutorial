@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>client
+  </title>
+
+  <style>
+    .response{
+      display: grid;
+      grid-template-columns: 200px 100px;
+    }
+  </style>
+</head>
+<body>
+  
+  <input class="name" type="text" >
+  <input class="age" type="number" name="age" >
+  <button onclick="server()">Get Response</button>
+  <div class="response"></div>
+  <script>
+    var arr = []
+    
+
+
+    
+   async function server() {
+      
+ 
+  
+
+   const user = document.querySelector('.name');
+   const username = user.value;
+    const userage = document.querySelector('.age');
+    const age = userage.value;
+    const res = await fetch('http://localhost:3000/home',{
+      method:'POST',
+      headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    name: username,
+    age: age
+  })
+    });
+
+    const resu =  await res.json();
+    
+    
+  
+     
+    const nameUser = resu.name;
+    const ageUser = resu.age;
+
+    arr.push({nameUser,ageUser})
+    
+  
+
+    let todoHTML = '';
+
+    arr.forEach((elements)=>{
+      
+      
+       var html = `<div>${elements.nameUser}</div> 
+       <div>${elements.ageUser}</div>`
+
+         todoHTML+=html;
+    }) 
+    
+   
+    document.querySelector('.response').innerHTML=todoHTML;
+   }
+
+    
+  </script>
+</body>
+</html>
