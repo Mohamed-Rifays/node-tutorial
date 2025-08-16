@@ -21,7 +21,7 @@ const renderHTML = path.join(__dirname,'../public')
 app.use(express.static(renderHTML))
 
 
-
+app.set('view engine','hbs')
 
 
 app.post('/home',(req,res)=>{
