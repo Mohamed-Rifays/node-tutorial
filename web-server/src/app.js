@@ -3,7 +3,7 @@ import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import hbs from 'hbs'
-import { title } from 'process';
+
 
 
 const app = express();
@@ -77,8 +77,21 @@ app.get('/weather',(req,res)=>{
    })
 })
 
-app.get('/contact',(req,res)=>{
-  res.send('contact')
+
+
+app.get('/errortest',(req,res)=>{
+   res.render('error-test',{
+    title:'error-test',
+    message:'testing'
+   })
+})
+
+app.get('/errortest/*error',(req,res)=>{
+  res.send("article not found")
+});
+
+app.use((req,res)=>{
+   res.status(404).send("there is a 404 error please check it.")
 })
 
 app.listen(3000,()=>{

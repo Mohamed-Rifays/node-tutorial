@@ -1,0 +1,19 @@
+body{
+    color: red;
+    border: 5px solid black;
+    width: 300px;
+    margin: 0 auto;
+    padding:0 10px
+}
+
+footer{
+    background-color: lightblue;
+    color: white;
+    padding: 4px 0px;
+    margin-bottom: 5px;
+}
+
+a{
+    margin-right: 5px ;
+    text-decoration: none;
+}
