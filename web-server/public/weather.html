@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>weather forecast</title>
+</head>
+<body>
+   Name: <input class="user-info" type="text">
+    Location : <input class="location" type="text">
+    <button onclick="renderweather()">Get Forecast</button>
+    
+    <p class="info-user"></p>
+    <p class="display-result"></p>
+    <script>
+
+        
+        async function renderweather() {
+            
+            const loc = document.querySelector('.location').value;
+            const user = document.querySelector('.user-info').value;
+
+            document.querySelector('.display-result').innerHTML = 'Please Wait , Your request is processing'
+        const response = await fetch(`http://localhost:3000/weather?address=${loc}`);
+
+        const result = await response.json();
+
+            console.log(result);
+
+            document.querySelector('.info-user').innerHTML = `Hey ${user} Here's your forecast info`
+            
+        document.querySelector('.display-result').innerHTML = `the temperature is : ${result.current.temperature} but it feels like : ${result.current.feelslike}`
+        }
+
+        
+    </script>
+</body>
+</html>

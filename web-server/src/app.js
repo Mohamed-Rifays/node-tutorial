@@ -3,6 +3,9 @@ import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import hbs from 'hbs'
+import { log } from 'console';
+import {getweather} from './weatherstack.js'
+import { title } from 'process';
 
 
 
@@ -31,10 +34,17 @@ app.set('view engine','hbs')
 
  app.set('views',path.join(__dirname,'../templates/views'))
 
-app.get('',(req,res)=>{
-  res.render('index',{title:'hbs setup',
-    message:'dynamic html',
+app.get('',async(req,res)=>{
+if(!req.query.address){
+    return res.send('add the address in the query');
+   }
+
+   const src = req.query.address
+  res.render('index',{
+    title:'forecast',
+    message:await getweather(src),
      footer:'Created by : Mohamed Rifays'
+
   })
 })
 
@@ -70,11 +80,22 @@ app.post('/home',(req,res)=>{
 
 
 
-app.get('/weather',(req,res)=>{
-   res.send({
-    forecast:'33 degrees',
-    locatiion:'Tiruchirappalli'
-   })
+app.get('/weather',async (req,res)=>{
+  console.log(req.query.address);
+
+  if(!req.query.address){
+    return res.status(404).send({
+      error:'You must provide an address in the query.'
+    })
+  }
+  
+  
+   if(!req.query.address){
+    return res.send({error:'add the address in the query'});
+   }
+
+   const src = req.query.address;
+  res.send(await getweather(src))
 })
 
 
@@ -98,3 +119,60 @@ app.listen(3000,()=>{
   console.log('server is up on port 3000');
   
 })
+
+
+
+/*
+  app.post('/weather', async (req,res)=>{
+  console.log(req)
+   const  location  = req.body.location;
+   const weatherData = await getweather(location);
+   
+   if (weatherData.error){
+    return res.render('weather',{
+      result: `Error : ${weatherData.error}`
+    })
+   }
+   
+  res.json({
+    message:weatherData.current.temperature
+  })
+})
+
+export async function getweather(place){
+
+    
+    try{
+
+    
+       const response =await fetch(`http://api.weatherstack.com/current?access_key=00372cf0f3018e9484cb1f3ecef3416a&query=${place}`)
+
+       
+       
+  const result = await response.json()
+ 
+  if(result.error){
+   
+    console.log('check the url');
+
+    return {error:'invalid location'}
+    
+  }
+  
+    
+  
+
+ return result;
+  
+  }
+  catch(error){
+    console.log(error);
+    return { error: error.message};
+
+     
+   
+    
+  }
+  
+  }
+  */

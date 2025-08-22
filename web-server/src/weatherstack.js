@@ -1,0 +1,43 @@
+export async function getweather(place){
+
+    
+    try{
+
+    
+       const response =await fetch(`http://api.weatherstack.com/current?access_key=00372cf0f3018e9484cb1f3ecef3416a&query=${place}`)
+
+       
+  const result = await response.json()
+   
+  
+ 
+  if(result.error){
+      
+    
+    
+    
+    return {error : 'check the url'};
+    
+  }
+  else{
+
+  return {
+    current :{
+      temperature : result.current.temperature,
+      feelslike : result.current.feelslike
+    }
+  }
+  }
+  }
+  catch(error){
+    
+
+     
+    return {
+    error : 'something went wrong'
+    } 
+    
+  }
+  
+  }
+  

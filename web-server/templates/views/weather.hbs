@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+    <input class="location" type="text">
+    <button onclick="gettingweather();">get-weather</button>
+   
+   <p class="display"></p>
+<script>
+ 
+
+  async function gettingweather(){
+       
+    const response = await fetch('/weather',{
+        method:'POST',
+        headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    location:'tiruchirappalli'
+  }
+   
+)
+    })
+  
+  const result =await  response.json();
+
+  
+  document.querySelector('.display').innerHTML = result.message
+  
+  }
+</script>
+</body>
+
+
+</html>
