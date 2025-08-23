@@ -9,7 +9,10 @@ export async function getweather(place){
        
   const result = await response.json()
    
-  
+    if(result.success === false){
+    return {
+      error: result.error.type
+     } }
  
   if(result.error){
       
@@ -19,6 +22,7 @@ export async function getweather(place){
     return {error : 'check the url'};
     
   }
+  
   else{
 
   return {
@@ -38,6 +42,6 @@ export async function getweather(place){
     } 
     
   }
-  
+
   }
   

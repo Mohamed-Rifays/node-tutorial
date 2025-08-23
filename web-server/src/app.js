@@ -35,15 +35,13 @@ app.set('view engine','hbs')
  app.set('views',path.join(__dirname,'../templates/views'))
 
 app.get('',async(req,res)=>{
-if(!req.query.address){
-    return res.send('add the address in the query');
-   }
+
 
    const src = req.query.address
   res.render('index',{
     title:'forecast',
-    message:await getweather(src),
-     footer:'Created by : Mohamed Rifays'
+    message:'WEATHER-FORECAST'
+    
 
   })
 })
