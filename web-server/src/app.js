@@ -37,10 +37,11 @@ app.set('view engine','hbs')
 app.get('',async(req,res)=>{
 
 
-   const src = req.query.address
+   
   res.render('index',{
     title:'forecast',
-    message:'WEATHER-FORECAST'
+    message:'WEATHER-FORECAST',
+    footer:'Created by : Mohamed Rifays'
     
 
   })

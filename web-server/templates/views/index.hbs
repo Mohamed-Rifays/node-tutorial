@@ -4,23 +4,51 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>weather forecast</title>
+     <link rel="stylesheet" href="/css/style.css">
+
 </head>
 <body>
-
+  
   {{>header}}
-   Name: <input class="user-info" type="text">
-    Location : <input class="location" type="text">
-    <button onclick="renderweather()">Get Forecast</button>
-    
+  
+<div class="working-content">
+  <div >
+   Name: <input class="user-info" type="text" >
+   </div>
+
+
+   <div>
+    Location : <input class="location" type="text" onkeydown="keyEvent(event)">
+    </div>
+
+    <div class="get-forecast">
+     
+    <button  onclick="renderweather()" >Get Forecast</button>
+    </div>
+
+    <div >
     <p class="info-user"></p>
     <p class="display-result"></p>
+    </div>
+    </div>
+    </div>
     <script>
 
+    
         
         async function renderweather() {
             
             const loc = document.querySelector('.location').value;
             const user = document.querySelector('.user-info').value;
+           
+
+            if(loc === ''){
+                
+                 document.querySelector('.display-result').innerHTML = 'Please provide the address'
+            }
+            else{
+                
+           
 
             document.querySelector('.display-result').innerHTML = 'Please Wait , Your request is processing'
             try{
@@ -46,16 +74,22 @@
 
         
 
-            document.querySelector('.info-user').innerHTML = `Hey ${user} Here's your forecast info`
+            document.querySelector('.info-user').innerHTML = `Hey ${user} Here's your forecast info for ${loc}`
 
             
         
                document.querySelector('.display-result').innerHTML = `the temperature is : ${result.current.temperature} but it feels like : ${result.current.feelslike}`
             }
             
-        
+         }
     
-
+ 
+    function keyEvent(event){
+     if(event.key === "Enter"){
+        console.log('hello')
+        renderweather()
+     }
+    }
         
     </script>
     {{>footer}}
