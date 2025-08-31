@@ -116,7 +116,7 @@ app.use((req,res)=>{
 })
 
 app.listen(port,"0.0.0.0",()=>{
-  console.log('server is up on port 3000');
+  console.log(`server is up on port ${port}`);
   
 })
 
