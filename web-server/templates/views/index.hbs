@@ -54,7 +54,7 @@
             try{
 
             
-        const response = await fetch(`http://localhost:3000/weather?address=${loc}`);
+        const response = await fetch(`/weather?address=${loc}`);
 
         const result = await response.json();
 

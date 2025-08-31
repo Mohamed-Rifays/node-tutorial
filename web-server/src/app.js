@@ -60,7 +60,7 @@ app.get('/help',(req,res)=>{
 app.get('/contact',(req,res)=>{
    res.render('contact',{
     title:'contact page',
-    message:'contact number : 8778867174',
+    message:'contact number : my contact number',
      footer:'Created by : Mohamed Rifays'
    })
 })
