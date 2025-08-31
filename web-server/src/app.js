@@ -114,7 +114,7 @@ app.use((req,res)=>{
    res.status(404).send("there is a 404 error please check it.")
 })
 
-app.listen(3000,()=>{
+app.listen(3000,"0.0.0.0",()=>{
   console.log('server is up on port 3000');
   
 })
