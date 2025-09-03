@@ -28,7 +28,8 @@ export async function getweather(place){
   return {
     current :{
       temperature : result.current.temperature,
-      feelslike : result.current.feelslike
+      feelslike : result.current.feelslike,
+      humidity : result.current.humidity
     }
   }
   }

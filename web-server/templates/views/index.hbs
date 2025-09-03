@@ -6,10 +6,59 @@
     <title>weather forecast</title>
      <link rel="stylesheet" href="/css/style.css">
 
+
+   <style>
+    
+    
+        
+
+    .weather-logo{
+         width: 100px;
+        margin-top: 10px;
+        margin-left: 10px;
+    }
+
+
+        
+    
+    .forecast-info{
+         width: 300px;
+        height: 300px;
+        border: none;
+        border-radius: 20px;
+        background-color: rgb(238, 238, 238);
+    }
+  
+  .forecast-temp{
+      text-align: center;
+
+  }
+  .forecast-feels-like{
+     float: left;
+    margin-top: 35px;
+    padding-left: 10px;
+  }
+  .forecast-humidity{
+     float: right;
+    margin-top: 35px;
+    padding-right: 10px;
+  }
+  
+  
+  h2{
+    text-align: center;
+    padding-top: 15px;
+  }
+  .working-content{
+    margin-top: -50px;
+  }
+   </style>
 </head>
 <body>
   
   {{>header}}
+
+  
   
 <div class="working-content">
   <div >
@@ -65,11 +114,33 @@
 
             }
         else{
-            document.querySelector('.info-user').innerHTML = `Hey ${user} Here's your forecast info for ${loc}`
+            document.querySelector('.info-user').innerHTML = `<center>
+            Hey ${user} Here's your forecast info for ${loc}
+            </center>`
 
             
         
-               document.querySelector('.display-result').innerHTML = `the temperature is : ${result.current.temperature} but it feels like : ${result.current.feelslike}`
+               document.querySelector('.display-result').innerHTML = `
+               <center>
+               <div class="forecast-info">
+               <h2>FORECAST INFO</h2>
+               <img class="weather-logo" src="
+               /images/weather-logo.png">
+               
+               <div class="forecast-temp">
+               Temperature : ${result.current.temperature} 
+               </div>
+               
+               <div class="forecast-feels-like">
+               Feels like : ${result.current.feelslike}
+               </div>
+
+               <div class="forecast-humidity">
+                Humidity : ${result.current.humidity}
+               </div>
+
+               </div>
+               </center>`
         }
             }
             catch(error)
