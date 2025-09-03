@@ -64,6 +64,13 @@
                 document.querySelector('.display-result').innerHTML = `there is an error of :${result.error}`
 
             }
+        else{
+            document.querySelector('.info-user').innerHTML = `Hey ${user} Here's your forecast info for ${loc}`
+
+            
+        
+               document.querySelector('.display-result').innerHTML = `the temperature is : ${result.current.temperature} but it feels like : ${result.current.feelslike}`
+        }
             }
             catch(error)
             {
@@ -73,11 +80,7 @@
 
         
 
-            document.querySelector('.info-user').innerHTML = `Hey ${user} Here's your forecast info for ${loc}`
-
             
-        
-               document.querySelector('.display-result').innerHTML = `the temperature is : ${result.current.temperature} but it feels like : ${result.current.feelslike}`
             }
             
          }
