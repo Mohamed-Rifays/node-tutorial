@@ -15,7 +15,7 @@
     .weather-logo{
          width: 100px;
         margin-top: 10px;
-        margin-left: 10px;
+        margin-left: 100px;
     }
 
 
@@ -48,6 +48,7 @@
   h2{
     text-align: center;
     padding-top: 15px;
+    
   }
   .working-content{
     margin-top: -50px;
@@ -114,14 +115,14 @@
 
             }
         else{
-            document.querySelector('.info-user').innerHTML = `<center>
+            document.querySelector('.info-user').innerHTML = `
             Hey ${user} Here's your forecast info for ${loc}
-            </center>`
+            `
 
             
         
                document.querySelector('.display-result').innerHTML = `
-               <center>
+               
                <div class="forecast-info">
                <h2>FORECAST INFO</h2>
                <img class="weather-logo" src="
@@ -140,7 +141,7 @@
                </div>
 
                </div>
-               </center>`
+               `
         }
             }
             catch(error)
