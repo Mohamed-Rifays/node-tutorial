@@ -6,6 +6,7 @@ import hbs from 'hbs'
 import { log } from 'console';
 import {getweather} from './weatherstack.js'
 import { title } from 'process';
+import {saveUser} from "./mongodb.js"
 
 
 
@@ -81,6 +82,8 @@ app.post('/home',(req,res)=>{
 
 
 app.get('/weather',async (req,res)=>{
+
+  const {name, address} = req.query;
   console.log(req.query.address);
 
   if(!req.query.address){
@@ -94,7 +97,9 @@ app.get('/weather',async (req,res)=>{
     return res.send({error:'add the address in the query'});
    }
 
-   const src = req.query.address;
+   await saveUser(name,address)
+
+   const src = address;
   res.send(await getweather(src))
 })
 
