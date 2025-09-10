@@ -92,15 +92,20 @@ app.get('/weather',async (req,res)=>{
     })
   }
   
-  
-   if(!req.query.address){
-    return res.send({error:'add the address in the query'});
-   }
+  try{
+    const weather = await getweather(address)
 
-   await saveUser(name,address);
+    await saveUser(name,address);
 
-   const src = address;
-  res.send(await getweather(src))
+    res.send(weather)
+  }
+  catch(err){
+    console.error("Error in /weather:",err);
+    res.status(500).send({error:"something went wrong"});
+  }
+
+   
+ 
 })
 
 
