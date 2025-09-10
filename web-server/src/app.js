@@ -97,10 +97,11 @@ app.get('/weather',async (req,res)=>{
     return res.send({error:'add the address in the query'});
    }
 
-   await saveUser(name,address)
+   
 
    const src = address;
   res.send(await getweather(src))
+  await saveUser(name,address)
 })
 
 

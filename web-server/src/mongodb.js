@@ -1,6 +1,6 @@
 import {MongoClient} from 'mongodb';
 
-const connectionURL = 'mongodb://127.0.0.1:27017/weather-app';
+const connectionURL = process.env.MONGO_URI || "mongodb://127.0.0.1:27017/weather-app";
 const databaseName = 'weather-app';
 
 const client = new MongoClient(connectionURL);
