@@ -1,5 +1,7 @@
-import  mongoose, { model }  from "mongoose";
+import  mongoose from "mongoose";
 import validator from "validator";
+import bcrypt from 'bcrypt'
+import jwt from 'jsonwebtoken'
 
 export const userschema = new mongoose.Schema({
     name:{
@@ -10,6 +12,7 @@ export const userschema = new mongoose.Schema({
     email:{
         type:String,
         required:true,
+        unique:true,
         lowercase:true,
         validate(value) {
            if(!validator.isEmail(value)) {
@@ -36,9 +39,55 @@ export const userschema = new mongoose.Schema({
             validate(value) {
         if(value.toLowerCase().includes("password")) {
             throw new Error(" passwrod cannot contain password");
-                }
+                } 
             }
+        },
+        tokens:[{
+            token:{
+              type : String,
+              required:true  
+            }
+        }]
+    })
+
+ //methods are instance level function,on a single document.
+    userschema.methods.generateAuthToken = async function() {
+        const user = this;
+
+        const token = jwt.sign({_id:user._id.toString()},'secretkey');
+
+        user.tokens = user.tokens.concat({token});
+        await user.save();
+        console.log('data saved');
+        
+        return token;
+        
+    }
+
+//statics are model level function,on whole model.
+    userschema.statics.findByCredentials = (async(email,password)=>{
+        const user = await users.findOne({email});
+        if(!user) {
+            throw new Error('Unable to login');
         }
+
+        const ismatch = await bcrypt.compare(password,user.password);
+
+        if(!ismatch) {
+            throw new Error('Unable to login');
+        }
+
+        return user;
+    })
+
+    userschema.pre('save',async function (next){
+        const user = this
+        if(user.isModified('password')) {
+             user.password = await bcrypt.hash(user.password,8);
+        }
+       
+        
+        next();
     })
 export const users = mongoose.model('user',userschema);
 // const alice = new users({name:'alice ahamed',email:'rifays@gmail.com',age:'20',password:"PASskey"});
