@@ -50,6 +50,15 @@ export const userschema = new mongoose.Schema({
         }]
     })
 
+    userschema.methods.toJSON = function(){
+        const user = this
+        const userobject = user.toObject();
+        delete userobject.password;
+        delete userobject.tokens;
+
+        return userobject;
+    }
+
  //methods are instance level function,on a single document.
     userschema.methods.generateAuthToken = async function() {
         const user = this;

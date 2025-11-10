@@ -1,5 +1,6 @@
 import express from 'express'
 import { users } from '../models/user.js';
+import { auth } from '../middleware/auth.js';
 
 export const userrouter = new express.Router();
 
@@ -42,18 +43,38 @@ userrouter.post('/users/login',async(req,res)=>{
     }
 })
 
-userrouter.get('/users',async(req,res)=>{
+userrouter.post('/users/logout',auth,async(req,res)=>{
+  try {
+      req.user.tokens = req.user.tokens.filter((token)=>{
+          return token.token !==req.token; 
+      })
+      await req.user.save();
+      res.send();
+  }catch(error) {
+     res.status(500).send()
+  }
+})
+
+userrouter.post('/users/logoutall',auth,async(req,res)=>{
     try{
-      const userinfo = await users.find({})
-    res.send(userinfo)
-    }
-    catch(error) {
-         res.status(400).send(error);
+   req.user.tokens=[];
+   await req.user.save();
+    res.send()
+    }catch(error){
+        res.send(error)
     }
     
 })
 
-userrouter.patch('/users/:id',async(req,res)=>{
+userrouter.get('/users/me',auth,async(req,res)=>{
+    
+    console.log('hi');
+    
+   res.send(req.user);
+    
+})
+
+userrouter.patch('/users/me',auth,async(req,res)=>{
     const updates = Object.keys(req.body);
     const arr = ['name','email','age','password'];
     const isvalidate = updates.every((update)=>{
@@ -64,16 +85,13 @@ userrouter.patch('/users/:id',async(req,res)=>{
        return res.status(400).send("Invalid update ");
     }
     try{
-    const user = await users.findById(req.params.id);
+    const user = req.user;
     updates.forEach((update)=>{
         user[update] = req.body[update];
     })
     await user.save();
 
-    if(!user) {
-         res.status(400).send(error);
-
-    }
+   
     res.status(200).send(user);
     }catch(error) {
         res.status(500).send(error);
@@ -81,14 +99,21 @@ userrouter.patch('/users/:id',async(req,res)=>{
     
 })
 
-userrouter.delete('/users/:id',async(req,res)=>{
+userrouter.delete('/users/me',auth,async(req,res)=>{
     try{
-       const user = await users.findByIdAndDelete(req.params.id);
+    //    const user = await users.findByIdAndDelete(req.params.id);
 
-    if(!user) {
-        res.status(400).send("Invalid item to id");
-    }
-    res.status(200).send(user);
+    // if(!user) {
+    //     res.status(400).send("Invalid item to id");
+    // }
+    // res.status(200).send(user);
+    console.log('coming');
+    
+    await req.user.deleteOne();
+    console.log('removed');
+    
+    res.send(req.user);
+
     }catch(error) {
         res.send(error);
     }
