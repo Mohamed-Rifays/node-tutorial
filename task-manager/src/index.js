@@ -48,3 +48,24 @@ myfunc();
 // }
 
 // myfun();
+
+
+//i just tell my point and get me right or wrong , we use virtuals instead of giving a task object because everytime we create a task on that user it will updatee the arrat each time and stre the task as a array in the database for each user so to get rid of this we are using the virtual to make a connection between the user and task and get the task creted by the user without storing in the databse//
+
+import {tasks} from './models/task.js'
+import { users } from './models/user.js';
+const main = async()=>{
+    const task = await tasks.findById('691356951bb99d609962d8e2');
+    await task.populate('owner');
+    console.log(task.owner);
+   
+    const user = await users.findById('69122e5f888944f3ecc3427f');
+   
+    await user.populate('Tasks');
+    console.log(user.Tasks);
+    
+
+
+    
+}
+main();

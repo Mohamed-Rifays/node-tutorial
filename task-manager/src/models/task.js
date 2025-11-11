@@ -14,9 +14,10 @@ const taskschema = new mongoose.Schema({
         type:Boolean,
         default:false
     },
-    password:{
-        type:String,
-        required:true
+    owner :{
+        type:mongoose.Schema.Types.ObjectId,
+        required:true,
+        ref:'user'
     }
 })
 
@@ -32,7 +33,9 @@ export const tasks = mongoose.model('tasks',taskschema);
 
 
 
+//populate() used to populate the data that is relation to them.
 
+//... it is a spread operator.
 
 
 

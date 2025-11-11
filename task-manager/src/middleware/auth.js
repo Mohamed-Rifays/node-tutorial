@@ -5,7 +5,7 @@ export const auth = async (req,res,next)=>{
     try {
         const token = req.header('Authorization').
         //to get rid of the bearer word.//
-        replace('Bearer ','').trim();
+        replace('Bearer ','').trim() ;
         console.log(token);
         
         const decoded = jwt.verify(token,'secretkey');

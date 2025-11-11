@@ -2,6 +2,7 @@ import  mongoose from "mongoose";
 import validator from "validator";
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
+import { tasks } from "./task.js";
 
 export const userschema = new mongoose.Schema({
     name:{
@@ -47,7 +48,14 @@ export const userschema = new mongoose.Schema({
               type : String,
               required:true  
             }
-        }]
+        }],
+        
+    })
+
+    userschema.virtual('Tasks',{
+        ref:'tasks',
+        localField:'_id',
+        foreignField:'owner'
     })
 
     userschema.methods.toJSON = function(){
@@ -98,6 +106,18 @@ export const userschema = new mongoose.Schema({
         
         next();
     })
+
+
+    //{ document: true, query: false } → tells Mongoose you’re using deleteOne() on a document instance, not on the model.
+    // This way, when you call user.deleteOne(), this middleware runs automatically.
+
+    userschema.pre('deleteOne', { document: true, query: false },async function(next){
+     const user = this;
+     await tasks.deleteMany({owner:user._id})
+
+     next()
+    })
+
 export const users = mongoose.model('user',userschema);
 // const alice = new users({name:'alice ahamed',email:'rifays@gmail.com',age:'20',password:"PASskey"});
 
