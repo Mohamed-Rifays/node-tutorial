@@ -1,8 +1,56 @@
 import express from 'express'
 import { users } from '../models/user.js';
 import { auth } from '../middleware/auth.js';
+import multer from 'multer';
+import path from 'path'
+import fs from 'fs'
 
 export const userrouter = new express.Router();
+
+//creating a multer middleware
+const upload = multer({
+    limits:{
+        fileSize:2*1024*1024
+    },
+
+
+});
+
+//joining the images with the current working directory
+const uploadDir = path.join(process.cwd(),'images');
+
+//if the images folder is not created create it automatically
+fs.mkdirSync(uploadDir,{recursive:true});
+
+//here comes the endpoint
+//upload.single expect one file from the request with the name 'upload', the name should match the name inside the brackets.
+userrouter.post('/upload/me/avatar',upload.single('upload'),(req,res)=>{
+
+    //to conform only images or uploaded
+  if (!req.file.originalName.match(/\.(jpg|jpeg|png)$/i)) {
+    return res.status(400).send('Only images allowed');
+  }
+
+//to generate a unique name
+    const uniqueName = Date.now()+'.jpg';
+
+    //joining the filename to the images folder
+    const destPath = path.join(uploadDir,uniqueName);
+
+//copying the file from the request which is stored temporarily in the system to the images folder
+    fs.copyFile(req.file.path,destPath,(err)=>{
+        if(err) {
+            console.error('error:',err);
+            return res.status(500).send('Error saving file');
+        }
+        res.send('file uploaded');
+        
+    })
+
+   
+    
+})
+
 
 userrouter.post('/users',async(req,res)=>{
     try{

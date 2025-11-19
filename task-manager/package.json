@@ -17,6 +17,7 @@
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.19.0",
     "mongoose": "^8.19.1",
+    "multer": "^3.0.0-alpha.1",
     "validator": "^13.15.15"
   },
   "devDependencies": {

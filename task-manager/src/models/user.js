@@ -48,8 +48,10 @@ export const userschema = new mongoose.Schema({
               type : String,
               required:true  
             }
-        }],
+        }]
         
+    },{
+        timestamps:true
     })
 
     userschema.virtual('Tasks',{

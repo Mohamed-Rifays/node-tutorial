@@ -33,9 +33,34 @@ taskrouter.get('/tasks',auth,async(req,res)=>{
 
         // res.send(taskinfo);
 
+        const match = {}
+        const sort = {}
+
+        if(req.query.completed){
+            match.completed = req.query.completed === 'true';
+            
+        }
+
+        if(req.query.sortBy){
+            const parts = req.query.sortBy.split(':');
+            sort[parts[0]] = parts[1] === 'desc'?-1:1;
+        }
+
         const user = req.user;
 
-         await user.populate('Tasks')
+        // lmit and skip is used for pagination,linit is to limit the number of searches to display and skip is to move to net page witht the same limit.//
+
+        // if the limit is not a number then its ignored by the mongoose ,it works only if its a number.//
+
+         await user.populate({
+            path:'Tasks',
+            match,
+            options:{
+                limit:parseInt(req.query.limit),
+                skip:parseInt(req.query.skip),
+                sort
+            }
+         })
         res.send(user.Tasks);
         
     }catch(error) {
