@@ -3,6 +3,7 @@ import validator from "validator";
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import { tasks } from "./task.js";
+import { type } from "os";
 
 export const userschema = new mongoose.Schema({
     name:{
@@ -48,7 +49,10 @@ export const userschema = new mongoose.Schema({
               type : String,
               required:true  
             }
-        }]
+        }],
+        avatar:{
+            type:Buffer
+        }
         
     },{
         timestamps:true
@@ -64,7 +68,8 @@ export const userschema = new mongoose.Schema({
         const user = this
         const userobject = user.toObject();
         delete userobject.password;
-        delete userobject.tokens;
+        delete userobject.tokens; 
+        delete userobject.avatar;
 
         return userobject;
     }

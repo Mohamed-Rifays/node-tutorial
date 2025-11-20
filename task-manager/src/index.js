@@ -32,17 +32,17 @@ app.listen(port, ()=>{
 })
 
 
-import jwt from 'jsonwebtoken';
+// import jwt from 'jsonwebtoken';
 
-const  myfunc = async ()=>{
-   const token = jwt.sign({_id:'hi123'},'secretkey');
-   console.log(token);
+// const  myfunc = async ()=>{
+//    const token = jwt.sign({_id:'hi123'},'secretkey');
+//    console.log(token);
    
-   const data = jwt.verify(token,'secretkey');
-   console.log(data);
+//    const data = jwt.verify(token,'secretkey');
+//    console.log(data);
    
-}
-myfunc();
+// }
+// myfunc();
 
 // import bcrypt from 'bcrypt'
   

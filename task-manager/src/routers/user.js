@@ -7,10 +7,12 @@ import fs from 'fs'
 
 export const userrouter = new express.Router();
 
+
+
 //creating a multer middleware
 const upload = multer({
     limits:{
-        fileSize:2*1024*1024
+        fileSize:1*1024*1024
     },
 
 
@@ -24,32 +26,90 @@ fs.mkdirSync(uploadDir,{recursive:true});
 
 //here comes the endpoint
 //upload.single expect one file from the request with the name 'upload', the name should match the name inside the brackets.
-userrouter.post('/upload/me/avatar',upload.single('upload'),(req,res)=>{
+userrouter.post('/upload/me/avatar',auth,upload.single('upload'),async(req,res)=>{
+
+    
+    
+    
+
+    try{
+
+    
 
     //to conform only images or uploaded
+    //i flag ,Makes it case-insensitive, so .JPG, .Jpg, .PNG all work.
   if (!req.file.originalName.match(/\.(jpg|jpeg|png)$/i)) {
     return res.status(400).send('Only images allowed');
   }
 
 //to generate a unique name
-    const uniqueName = Date.now()+'.jpg';
+//     const uniqueName = Date.now()+'.jpg';
 
-    //joining the filename to the images folder
-    const destPath = path.join(uploadDir,uniqueName);
+//     //joining the filename to the images folder
+//     const destPath = path.join(uploadDir,uniqueName);
 
-//copying the file from the request which is stored temporarily in the system to the images folder
-    fs.copyFile(req.file.path,destPath,(err)=>{
-        if(err) {
-            console.error('error:',err);
-            return res.status(500).send('Error saving file');
-        }
-        res.send('file uploaded');
+// //copying the file from the request which is stored temporarily in the system to the images folder
+//     fs.copyFile(req.file.path,destPath,(err)=>{
+//         if(err) {
+//             console.error('error:',err);
+//             return res.status(500).send('Error saving file');
+//         }
+//         res.send('file uploaded');
         
-    })
+//     })
 
-   
+//to convert the image to buffer and store it in the database
+const fileBuffer = await fs.promises.readFile(req.file.path);
+
+req.user.avatar = fileBuffer;
+await req.user.save();
+
+ res.set('Content-Type', 'image/jpeg');
+ res.send(req.user.avatar);
+
+}catch(error) {
+    res.send(error)
+}
+    
+},(error,req,res,next)=>{
+    res.status(400).send({
+        error:error.message
+    })
+})
+
+userrouter.get('/user/me/avatar',auth,(req,res)=>{
+    try{
+        if(!req.user.avatar){
+            throw new error();
+        }
+       res.set('Content-Type','image/jpeg');
+       res.send(req.user.avatar);  
+    }catch(error){
+         res.status(400).send()
+    }
     
 })
+
+userrouter.delete('/user/me/avatar',auth,async(req,res)=>{
+    req.user.avatar = undefined;
+    await req.user.save();
+    res.send();
+})
+// userrouter.use((err, req, res, next) => {
+//   // Multer errors usually have name === 'MulterError'
+//   if (err && err.name === 'MulterError') {
+//     console.error('Multer error:', err);
+
+//     return res.status(400).json({
+//       error: 'Upload error',
+//       message: err.message, // e.g. 'File too large'
+//       code: err.code        // e.g. 'LIMIT_FILE_SIZE'
+//     });
+//   }
+
+//   console.error('Unhandled error:', err);
+//   res.status(500).json({ error: 'Something went wrong' });
+// });
 
 
 userrouter.post('/users',async(req,res)=>{
@@ -166,4 +226,6 @@ userrouter.delete('/users/me',auth,async(req,res)=>{
         res.send(error);
     }
 })
+
+
 
