@@ -2,8 +2,10 @@ import express from 'express'
 import { users } from '../models/user.js';
 import { auth } from '../middleware/auth.js';
 import multer from 'multer';
-import path from 'path'
-import fs from 'fs'
+import path from 'path';
+import fs from 'fs';
+import sharp from 'sharp';
+
 
 export const userrouter = new express.Router();
 
@@ -34,6 +36,8 @@ userrouter.post('/upload/me/avatar',auth,upload.single('upload'),async(req,res)=
 
     try{
 
+        const buffer = await sharp(req.file.path).resize({width:250,height:250}).png().toBuffer();
+
     
 
     //to conform only images or uploaded
@@ -59,9 +63,11 @@ userrouter.post('/upload/me/avatar',auth,upload.single('upload'),async(req,res)=
 //     })
 
 //to convert the image to buffer and store it in the database
-const fileBuffer = await fs.promises.readFile(req.file.path);
 
-req.user.avatar = fileBuffer;
+//if not using sharp use the below one to convert to buffer 
+// const fileBuffer = await fs.promises.readFile(req.file.path);
+
+req.user.avatar = buffer;
 await req.user.save();
 
  res.set('Content-Type', 'image/jpeg');
@@ -82,7 +88,7 @@ userrouter.get('/user/me/avatar',auth,(req,res)=>{
         if(!req.user.avatar){
             throw new error();
         }
-       res.set('Content-Type','image/jpeg');
+       res.set('Content-Type','image/png');
        res.send(req.user.avatar);  
     }catch(error){
          res.status(400).send()
