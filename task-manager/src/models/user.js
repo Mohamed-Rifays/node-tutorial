@@ -4,6 +4,9 @@ import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import { tasks } from "./task.js";
 import { type } from "os";
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 export const userschema = new mongoose.Schema({
     name:{
@@ -78,7 +81,7 @@ export const userschema = new mongoose.Schema({
     userschema.methods.generateAuthToken = async function() {
         const user = this;
 
-        const token = jwt.sign({_id:user._id.toString()},'secretkey');
+        const token = jwt.sign({_id:user._id.toString()},'process.env.JWT_SECRET');
 
         user.tokens = user.tokens.concat({token});
         await user.save();

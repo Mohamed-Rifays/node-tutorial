@@ -5,6 +5,7 @@ import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
 import sharp from 'sharp';
+import { sendWelcomeEmail, sendCancellationEmail } from '../emails/account.js';
 
 
 export const userrouter = new express.Router();
@@ -14,7 +15,7 @@ export const userrouter = new express.Router();
 //creating a multer middleware
 const upload = multer({
     limits:{
-        fileSize:1*1024*1024
+        fileSize:1*1024*1024 //1MB
     },
 
 
@@ -129,6 +130,8 @@ userrouter.post('/users',async(req,res)=>{
    await user.save();
 
     const token = await user.generateAuthToken();
+
+    sendWelcomeEmail(user.email,user.name);
    console.log(req.body.email);
    
 
@@ -224,6 +227,7 @@ userrouter.delete('/users/me',auth,async(req,res)=>{
     console.log('coming');
     
     await req.user.deleteOne();
+    sendCancellationEmail(req.user.email,req.user.name);
     console.log('removed');
     
     res.send(req.user);

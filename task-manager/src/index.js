@@ -2,13 +2,15 @@ import express from 'express'
 import  mongoose from "mongoose";
 import { userrouter } from './routers/user.js';
 import { taskrouter } from './routers/task.js';
+import dotenv from 'dotenv';    
+dotenv.config();
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || process.env.PORT;
 
 app.use(express.json());
 
-await mongoose.connect('mongodb://127.0.0.1:27017/task-manager-api');
+await mongoose.connect('process.env.MONGO_URL');
 
 
 // import multer from 'multer';

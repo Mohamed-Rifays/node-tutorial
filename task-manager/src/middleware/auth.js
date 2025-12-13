@@ -1,5 +1,8 @@
 import jwt from 'jsonwebtoken';
 import { users } from '../models/user.js';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 export const auth = async (req,res,next)=>{
     try {
@@ -8,7 +11,7 @@ export const auth = async (req,res,next)=>{
         replace('Bearer ','').trim() ;
         console.log(token);
         
-        const decoded = jwt.verify(token,'secretkey');
+        const decoded = jwt.verify(token,process.env.JWT_SECRET);
         
         console.log(decoded);
         
