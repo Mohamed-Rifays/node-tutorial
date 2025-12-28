@@ -1,7 +1,8 @@
 import express from 'express'
 import { users } from '../models/user.js';
 import { auth } from '../middleware/auth.js';
-import multer from 'multer';
+import upload from '../utils/upload.js';
+
 import path from 'path';
 import fs from 'fs';
 import sharp from 'sharp';
@@ -13,13 +14,13 @@ export const userrouter = new express.Router();
 
 
 //creating a multer middleware
-const upload = multer({
-    limits:{
-        fileSize:1*1024*1024 //1MB
-    },
+// const upload = multer({
+//     limits:{
+//         fileSize:1*1024*1024 //1MB
+//     },
 
 
-});
+// });
 
 //joining the images with the current working directory
 const uploadDir = path.join(process.cwd(),'images');
@@ -37,15 +38,15 @@ userrouter.post('/upload/me/avatar',auth,upload.single('upload'),async(req,res)=
 
     try{
 
+
+        
         const buffer = await sharp(req.file.path).resize({width:250,height:250}).png().toBuffer();
 
     
 
     //to conform only images or uploaded
     //i flag ,Makes it case-insensitive, so .JPG, .Jpg, .PNG all work.
-  if (!req.file.originalName.match(/\.(jpg|jpeg|png)$/i)) {
-    return res.status(400).send('Only images allowed');
-  }
+  
 
 //to generate a unique name
 //     const uniqueName = Date.now()+'.jpg';
@@ -131,15 +132,15 @@ userrouter.post('/users',async(req,res)=>{
 
     const token = await user.generateAuthToken();
 
-    sendWelcomeEmail(user.email,user.name);
-   console.log(req.body.email);
+//     sendWelcomeEmail(user.email,user.name);
+//    console.log(req.body.email);
    
 
 
    console.log("data saved to db");
    
 
-   res.send({user,token});
+   res.status(201).send({user,token});
     }catch(error){
         res.send(error)
           res.send("something went wrong");
@@ -227,7 +228,7 @@ userrouter.delete('/users/me',auth,async(req,res)=>{
     console.log('coming');
     
     await req.user.deleteOne();
-    sendCancellationEmail(req.user.email,req.user.name);
+    // sendCancellationEmail(req.user.email,req.user.name);
     console.log('removed');
     
     res.send(req.user);

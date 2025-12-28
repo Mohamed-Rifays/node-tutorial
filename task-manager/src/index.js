@@ -1,16 +1,16 @@
-import express from 'express'
-import  mongoose from "mongoose";
-import { userrouter } from './routers/user.js';
-import { taskrouter } from './routers/task.js';
-import dotenv from 'dotenv';    
+import dotenv from 'dotenv';
 dotenv.config();
+import { app } from './app.js';
+import {connectDb} from './db/mongoose.js';
 
-const app = express();
-const port = process.env.PORT || process.env.PORT;
+const port = process.env.PORT || process.env.PORT_NUMBER;
 
-app.use(express.json());
+await connectDb();
 
-await mongoose.connect('process.env.MONGO_URL');
+
+app.listen(port, ()=>{
+    console.log('server is up on port' + port);
+})
 
 
 // import multer from 'multer';
@@ -25,13 +25,6 @@ await mongoose.connect('process.env.MONGO_URL');
 // })
 
 
-app.use(userrouter);
-app.use(taskrouter)
-
-
-app.listen(port, ()=>{
-    console.log('server is up on port' + port);
-})
 
 
 // import jwt from 'jsonwebtoken';
@@ -65,7 +58,7 @@ app.listen(port, ()=>{
 // myfun();
 
 
-//i just tell my point and get me right or wrong , we use virtuals instead of giving a task object because everytime we create a task on that user it will updatee the arrat each time and stre the task as a array in the database for each user so to get rid of this we are using the virtual to make a connection between the user and task and get the task creted by the user without storing in the databse//
+//i just tell my point and get me right or wrong , we use virtuals instead of giving a task object because everytime we create a task on that user it will updatee the array each time and stre the task as a array in the database for each user so to get rid of this we are using the virtual to make a connection between the user and task and get the task creted by the user without storing in the databse//
 
 // import {tasks} from './models/task.js'       
 // import { users } from './models/user.js';

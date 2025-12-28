@@ -48,7 +48,7 @@ taskrouter.get('/tasks',auth,async(req,res)=>{
 
         const user = req.user;
 
-        // lmit and skip is used for pagination,linit is to limit the number of searches to display and skip is to move to net page witht the same limit.//
+        // limit and skip is used for pagination,limit is to limit the number of searches to display and skip is to move to net page with the same limit.//
 
         // if the limit is not a number then its ignored by the mongoose ,it works only if its a number.//
 
