@@ -20,6 +20,15 @@ const forminput = toggleName.querySelector('input');
 const formbutton = toggleName.querySelector('button');
 
 const Location = document.getElementById('sendLocation');
+const messages = document.getElementById('messages');
+
+//Templates
+const messageTemplate = document.getElementById('message-template').innerHTML;
+const locationTemplate = document.getElementById('location-template').innerHTML;
+
+
+//options (query)
+const { username,room } = Qs.parse(location.search,{ignoreQueryPrefix:true})
 
 toggleName.addEventListener('submit',(e)=>{
     e.preventDefault();
@@ -42,7 +51,21 @@ toggleName.addEventListener('submit',(e)=>{
 
 socket.on('message',(message)=>{
    console.log(message);
+   const html = Mustache.render(messageTemplate,{
+    message: message.text,
+    createdAt : moment(message.createdAt).format('h:mm a')
+   });
+    messages.insertAdjacentHTML('beforeend',html)
    
+})
+
+socket.on('sharelocation',(location)=>{
+    console.log(location);
+  const html = Mustache.render(locationTemplate,{
+    location:location.url,
+    createdAt:moment(location.createdAt).format('h:mm a')
+  })
+  messages.insertAdjacentHTML('beforeend',html)
 })
 
 Location.addEventListener('click',()=>{
@@ -58,8 +81,12 @@ Location.addEventListener('click',()=>{
         },()=>{
             console.log('Location shared');
             Location.removeAttribute('disabled');
-        })
+        }) 
         
 
     })
+})
+
+socket.emit('join',{username,room},(error)=>{
+
 })
