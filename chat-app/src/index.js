@@ -53,25 +53,36 @@ io.on('connection',(socket)=>{
         //io.to.emit is similar to io.emit but in the room we use it.
         //socket.broadcast.to.emit is similar to socket.broadcast.emit in the room we use it.
       socket.join(user.room);
-      socket.emit('message',generateMessage('welcome!'))
-      socket.broadcast.to(user.room).emit('message',generateMessage(`${user.username} has joined`));
+      socket.emit('message',generateMessage(`welcome ${user.username}!`,'Admin'))
+      socket.broadcast.to(user.room).emit('message',generateMessage(`${user.username} has joined the room`,'Admin'));
+      io.to(user.room).emit('roomdata',{
+        room:user.room,
+        users:getUsersInRoom(user.room)
+      })
 
       callback();
     })
 
     socket.on('displaymessage',(message,callback)=>{
+        
+        
+        const user = getUser(socket.id);
+        
+        
         const filter = new Filter();
 
         if(filter.isProfane(message)) {
             return callback('profanity not allowed');
         }
-       io.emit('message',generateMessage(message));
+       io.to(user.room).emit('message',generateMessage(message,user.username));
        callback();
 
     })
 
     socket.on('sendLocation',(location,shared)=>{
-        io.emit('sharelocation',generateLocationMessage(`https://google.com/maps?q=${location.latitude},${location.longitude}`))
+        const user = getUser(socket.id);
+
+        io.to(user.room).emit('sharelocation',generateLocationMessage(`https://google.com/maps?q=${location.latitude},${location.longitude}`,user.username))
         shared();
     }
 
@@ -79,7 +90,17 @@ io.on('connection',(socket)=>{
     )
 
     socket.on('disconnect',()=>{
-        io.emit('message',generateMessage('a user has left'));
+        const user = removeUser(socket.id)
+
+        if(user) {
+            io.to(user.room).emit('message',generateMessage(`${user.username} has left the room`,'Admin'));
+            io.to(user.room).emit('roomdata',{
+            room:user.room,
+            users:getUsersInRoom(user.room)
+      })
+        }
+
+        
     })
 
     

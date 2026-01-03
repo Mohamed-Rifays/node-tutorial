@@ -27,7 +27,7 @@ export const addUser = ({id,username,room})=>{
     //store user 
     const user = {id,username,room}
     users.push(user)
-    return(users)
+    return {user};
 }
 
 export const removeUser = (id)=>{

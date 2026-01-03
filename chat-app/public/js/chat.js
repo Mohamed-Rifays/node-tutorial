@@ -25,6 +25,8 @@ const messages = document.getElementById('messages');
 //Templates
 const messageTemplate = document.getElementById('message-template').innerHTML;
 const locationTemplate = document.getElementById('location-template').innerHTML;
+const sidebarTemplate = document.getElementById('sidebar-template').innerHTML;
+const sidebar = document.getElementById('sidebar');
 
 
 //options (query)
@@ -35,8 +37,8 @@ toggleName.addEventListener('submit',(e)=>{
 
     //disable button
     formbutton.setAttribute('disabled','disabled');
-    const name = e.target.elements.username.value;
-    socket.emit('displaymessage',name,(error)=>{
+    const mesg = e.target.elements.message.value;
+    socket.emit('displaymessage',mesg,(error)=>{
         //enable button
         formbutton.removeAttribute('disabled');
         forminput.value = '';
@@ -51,8 +53,11 @@ toggleName.addEventListener('submit',(e)=>{
 
 socket.on('message',(message)=>{
    console.log(message);
+   console.log(message.username);
+   
    const html = Mustache.render(messageTemplate,{
     message: message.text,
+    username:message.username,
     createdAt : moment(message.createdAt).format('h:mm a')
    });
     messages.insertAdjacentHTML('beforeend',html)
@@ -61,11 +66,20 @@ socket.on('message',(message)=>{
 
 socket.on('sharelocation',(location)=>{
     console.log(location);
-  const html = Mustache.render(locationTemplate,{
+    const html = Mustache.render(locationTemplate,{
     location:location.url,
+    username:location.username,
     createdAt:moment(location.createdAt).format('h:mm a')
   })
   messages.insertAdjacentHTML('beforeend',html)
+})
+
+socket.on('roomdata',({room,users})=>{
+  const html = Mustache.render(sidebarTemplate,{
+    room,users
+  })
+  sidebar.innerHTML = html;
+
 })
 
 Location.addEventListener('click',()=>{
@@ -88,5 +102,8 @@ Location.addEventListener('click',()=>{
 })
 
 socket.emit('join',{username,room},(error)=>{
-
+   if(error) {
+    alert(error)
+    location.href = '/';
+   }
 })
