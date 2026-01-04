@@ -51,6 +51,32 @@ toggleName.addEventListener('submit',(e)=>{
     });
 })  
 
+const autoscroll = () => {
+  //new message element
+  const newMessage = messages.lastElementChild
+
+  //Height of the new message
+  const newMessageStyles = getComputedStyle(newMessage);
+  const newMessageMargin = parseInt(newMessageStyles.marginBottom);
+  const newMessageHeight = newMessage.offsetHeight + newMessageMargin;
+
+  //visible height
+  //messages.offsetHeight Height of the visible area (viewport)
+  const visibleHeight = messages.offsetHeight
+  //height of messages container 
+  //messages.scrollHeight Total height of all messages combined
+  const containerHeight = messages.scrollHeight;
+
+  //how far have i scrolled
+  //scrollTop (height scrolled from the top)
+  const scrollOffset = messages.scrollTop + visibleHeight;
+
+  const threshold = 10
+  if(containerHeight - newMessageHeight - threshold <= scrollOffset ) {
+    messages.scrollTop = messages.scrollHeight;
+  }
+}
+
 socket.on('message',(message)=>{
    console.log(message);
    console.log(message.username);
@@ -61,6 +87,7 @@ socket.on('message',(message)=>{
     createdAt : moment(message.createdAt).format('h:mm a')
    });
     messages.insertAdjacentHTML('beforeend',html)
+    autoscroll();
    
 })
 
@@ -72,6 +99,7 @@ socket.on('sharelocation',(location)=>{
     createdAt:moment(location.createdAt).format('h:mm a')
   })
   messages.insertAdjacentHTML('beforeend',html)
+  autoscroll();
 })
 
 socket.on('roomdata',({room,users})=>{

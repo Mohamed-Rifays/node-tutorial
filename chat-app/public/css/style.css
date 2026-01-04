@@ -223,3 +223,21 @@ button:hover {
   background-color: black;
   color: white;
 }
+.message {
+  margin-bottom: 16px;
+}
+
+.meta {
+  font-size: 13px;
+  color: #777;
+}
+
+.username {
+  font-weight: bold;
+}
+
+.time {
+  margin-left: 8px;
+  font-size: 12px;
+}
+
